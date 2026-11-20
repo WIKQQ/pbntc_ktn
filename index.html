@@ -1,1045 +1,1061 @@
 <!doctype html>
-<html lang="th" class="h-full">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>เว็บไซต์คำนวณการเข้าร่วมกิจกรรมพัฒนาผู้เรียนอาชีวศึกษา</title>
-  <script src="/_sdk/element_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <style>
-    body {
-      box-sizing: border-box;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Kanit', sans-serif;
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
-    }
-
-    .main-wrapper {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      background: #1a1a1a;
-      overflow-y: auto;
-      position: relative;
-    }
-
-    .main-wrapper::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(circle at 10% 20%, rgba(196, 30, 58, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 90% 80%, rgba(230, 57, 70, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(196, 30, 58, 0.05) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .floating-shapes {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .shape {
-      position: absolute;
-      opacity: 0.1;
-      animation: float 20s infinite ease-in-out;
-    }
-
-    .shape:nth-child(1) {
-      top: 10%;
-      left: 10%;
-      width: 100px;
-      height: 100px;
-      background: linear-gradient(135deg, #c41e3a, #e63946);
-      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-      animation-delay: 0s;
-      animation-duration: 25s;
-    }
-
-    .shape:nth-child(2) {
-      top: 60%;
-      right: 15%;
-      width: 150px;
-      height: 150px;
-      background: linear-gradient(135deg, #e63946, #ff6b6b);
-      border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
-      animation-delay: 5s;
-      animation-duration: 30s;
-    }
-
-    .shape:nth-child(3) {
-      bottom: 20%;
-      left: 20%;
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, #c41e3a, #ff6b6b);
-      border-radius: 50%;
-      animation-delay: 10s;
-      animation-duration: 20s;
-    }
-
-    .shape:nth-child(4) {
-      top: 30%;
-      right: 25%;
-      width: 120px;
-      height: 120px;
-      background: linear-gradient(135deg, #e63946, #c41e3a);
-      border-radius: 30% 70% 53% 47% / 56% 23% 77% 44%;
-      animation-delay: 3s;
-      animation-duration: 28s;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-      }
-      25% {
-        transform: translate(30px, -30px) rotate(90deg);
-      }
-      50% {
-        transform: translate(-20px, 20px) rotate(180deg);
-      }
-      75% {
-        transform: translate(20px, 30px) rotate(270deg);
-      }
-    }
-
-    .header {
-      background: linear-gradient(135deg, #c41e3a 0%, #e63946 100%);
-      color: white;
-      padding: 20px 40px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      position: relative;
-    }
-
-    .header-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .site-title-container {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .site-logo {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
-    }
-
-    .site-title {
-      font-size: 28px;
-      font-weight: 800;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .nav-menu {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .nav-button {
-      background: rgba(255,255,255,0.2);
-      color: white;
-      border: 2px solid rgba(255,255,255,0.4);
-      padding: 10px 25px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .nav-button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.5s, height 0.5s;
-    }
-
-    .nav-button:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    .nav-button:hover {
-      background: rgba(255,255,255,0.3);
-      border-color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    }
-
-    .content-area {
-      flex: 1;
-      width: 100%;
-      padding: 40px 60px;
-      max-width: 1600px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    .home-screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .welcome-title {
-      font-size: 52px;
-      font-weight: 800;
-      color: white;
-      text-align: center;
-      text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
-      animation: fadeInDown 0.8s ease;
-      margin-bottom: 20px;
-    }
-
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .selection-container {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 50px;
-      width: 100%;
-      max-width: 1200px;
-    }
-
-    .selection-card {
-      background: linear-gradient(135deg, #2d2d2d 0%, #1f1f1f 100%);
-      border: 3px solid #c41e3a;
-      border-radius: 25px;
-      padding: 60px 45px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
-    .selection-card::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent, rgba(196,30,58,0.3), transparent);
-      transform: rotate(45deg);
-      transition: all 0.6s ease;
-    }
-
-    .selection-card:hover::before {
-      animation: shine 1.5s infinite;
-    }
-
-    @keyframes shine {
-      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-    }
-
-    .selection-card:hover {
-      transform: translateY(-10px) scale(1.05);
-      box-shadow: 0 20px 50px rgba(196,30,58,0.5);
-      border-color: #e63946;
-    }
-
-    .selection-icon {
-      font-size: 100px;
-      margin-bottom: 25px;
-      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
-      position: relative;
-      z-index: 1;
-    }
-
-    .selection-title {
-      font-size: 36px;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 18px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .selection-desc {
-      font-size: 20px;
-      color: #ddd;
-      line-height: 1.6;
-      position: relative;
-      z-index: 1;
-    }
-
-    .calculator-screen {
-      display: none;
-      animation: fadeIn 0.5s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .back-button {
-      background: #c41e3a;
-      color: white;
-      border: none;
-      padding: 12px 30px;
-      font-size: 18px;
-      font-weight: 600;
-      border-radius: 25px;
-      cursor: pointer;
-      margin-bottom: 30px;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .back-button:hover {
-      background: #e63946;
-      transform: translateX(-5px);
-      box-shadow: 0 5px 20px rgba(196,30,58,0.5);
-    }
-
-    .calculator-container {
-      background: linear-gradient(135deg, #2d2d2d 0%, #1f1f1f 100%);
-      border: 3px solid #c41e3a;
-      border-radius: 25px;
-      padding: 50px;
-      max-width: 1000px;
-      margin: 0 auto;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    }
-
-    .calculator-title {
-      font-size: 36px;
-      font-weight: 700;
-      color: white;
-      text-align: center;
-      margin-bottom: 30px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-    }
-
-    .form-group {
-      margin-bottom: 25px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 20px;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 10px;
-    }
-
-    .form-select, .form-input {
-      width: 100%;
-      padding: 15px 20px;
-      font-size: 18px;
-      font-weight: 500;
-      border: 2px solid #555;
-      border-radius: 12px;
-      background: #1a1a1a;
-      color: white;
-      transition: all 0.3s ease;
-      font-family: 'Kanit', sans-serif;
-    }
-
-    .form-select:focus, .form-input:focus {
-      outline: none;
-      border-color: #c41e3a;
-      box-shadow: 0 0 20px rgba(196,30,58,0.3);
-    }
-
-    .form-select option {
-      background: #1a1a1a;
-      color: white;
-      padding: 10px;
-    }
-
-    .calculate-button {
-      width: 100%;
-      background: linear-gradient(135deg, #c41e3a 0%, #e63946 100%);
-      color: white;
-      border: none;
-      padding: 18px 40px;
-      font-size: 24px;
-      font-weight: 700;
-      border-radius: 50px;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 25px rgba(196,30,58,0.4);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .calculate-button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    .calculate-button:hover::before {
-      width: 500px;
-      height: 500px;
-    }
-
-    .calculate-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(196,30,58,0.6);
-    }
-
-    .result-container {
-      margin-top: 30px;
-      padding: 30px;
-      background: rgba(196,30,58,0.1);
-      border: 2px solid #c41e3a;
-      border-radius: 15px;
-      display: none;
-    }
-
-    .result-container.show {
-      display: block;
-      animation: slideUp 0.5s ease;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .result-item {
-      font-size: 20px;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 15px;
-      padding: 15px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      border-left: 4px solid #c41e3a;
-    }
-
-    .result-value {
-      color: #ff6b6b;
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .pass-status {
-      font-size: 28px;
-      font-weight: 800;
-      text-align: center;
-      padding: 20px;
-      border-radius: 15px;
-      margin-top: 20px;
-    }
-
-    .pass-status.pass {
-      background: rgba(76, 175, 80, 0.2);
-      border: 3px solid #4CAF50;
-      color: #4CAF50;
-    }
-
-    .pass-status.fail {
-      background: rgba(244, 67, 54, 0.2);
-      border: 3px solid #f44336;
-      color: #f44336;
-    }
-
-    .footer {
-      background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-      color: white;
-      padding: 40px 40px;
-      border-top: 4px solid #c41e3a;
-      margin-top: auto;
-    }
-
-    .footer-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .footer-title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 15px;
-      color: #e63946;
-    }
-
-    .footer-address {
-      font-size: 18px;
-      line-height: 1.8;
-      color: #ddd;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      backdrop-filter: blur(5px);
-    }
-
-    .modal-overlay.show {
-      display: flex;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .modal-content {
-      background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
-      border: 3px solid #c41e3a;
-      border-radius: 20px;
-      padding: 40px;
-      max-width: 600px;
-      width: 90%;
-      max-height: 80%;
-      overflow-y: auto;
-      position: relative;
-      animation: slideUp 0.4s ease;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: #c41e3a;
-      color: white;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      font-size: 24px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-close:hover {
-      background: #e63946;
-      transform: rotate(90deg);
-    }
-
-    .modal-title {
-      font-size: 32px;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .modal-text {
-      font-size: 18px;
-      color: #ddd;
-      line-height: 1.8;
-      margin-bottom: 15px;
-    }
-
-    .executive-card {
-      background: rgba(196,30,58,0.1);
-      border: 2px solid #c41e3a;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 15px;
-    }
-
-    .executive-name {
-      font-size: 22px;
-      font-weight: 700;
-      color: #e63946;
-      margin-bottom: 5px;
-    }
-
-    .executive-position {
-      font-size: 18px;
-      color: #ddd;
-    }
-
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .site-title-container {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .site-logo {
-        width: 50px;
-        height: 50px;
-      }
-
-      .site-title {
-        font-size: 22px;
-        text-align: center;
-      }
-
-      .nav-menu {
-        justify-content: center;
-      }
-
-      .welcome-title {
-        font-size: 32px;
-      }
-
-      .selection-container {
-        grid-template-columns: 1fr;
-      }
-
-      .calculator-container {
-        padding: 25px;
-      }
-
-      .calculator-title {
-        font-size: 28px;
-      }
-
-      .content-area {
-        padding: 30px 20px;
-      }
-    }
-
-    .form-input[type="number"]::-webkit-inner-spin-button,
-    .form-input[type="number"]::-webkit-outer-spin-button {
-      opacity: 1;
-      height: 40px;
-    }
-  </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
- </head>
- <body class="h-full">
-  <div class="main-wrapper">
-   <div class="floating-shapes">
-    <div class="shape"></div>
-    <div class="shape"></div>
-    <div class="shape"></div>
-    <div class="shape"></div>
-   </div>
-   <header class="header">
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เว็บไซต์คำนวณการเข้าร่วมกิจกรรมพัฒนาผู้เรียนอาชีวศึกษา</title>
+<script>
+  // ตั้งธีมก่อนหน้าเว็บโหลด กันจอกะพริบ
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#c41e3a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="เช็คชื่อเข้าแถว">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #c41e3a; --red2: #e63946;
+  --bg: #1a1a1a; --card1: #2d2d2d; --card2: #1f1f1f;
+  --text: #ffffff; --muted: #dddddd; --input-bg: #1a1a1a; --input-border: #555;
+  --value: #ff6b6b; --item-bg: rgba(255,255,255,0.05);
+  --modal1: #3a3a3a; --modal2: #2a2a2a;
+  --footer1: #1a1a1a; --footer2: #0a0a0a;
+  --pass: #4CAF50; --fail: #f44336;
+  --shadow: rgba(0,0,0,0.4);
+}
+[data-theme="light"] {
+  --bg: #f3f4f7; --card1: #ffffff; --card2: #fafafa;
+  --text: #1a1a1a; --muted: #444444; --input-bg: #ffffff; --input-border: #bbb;
+  --value: #c41e3a; --item-bg: rgba(0,0,0,0.04);
+  --modal1: #ffffff; --modal2: #f6f6f8;
+  --footer1: #ffffff; --footer2: #e9eaee;
+  --pass: #2e7d32; --fail: #c62828;
+  --shadow: rgba(0,0,0,0.15);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+html, body { min-height: 100%; }
+body { background: var(--bg); color: var(--text); transition: background .3s, color .3s; }
+.main-wrapper { min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+.main-wrapper::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(196,30,58,.15) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(230,57,70,.1) 0%, transparent 50%);
+}
+.header {
+  background: linear-gradient(135deg, var(--red), var(--red2)); color: #fff;
+  padding: 16px 40px; box-shadow: 0 4px 20px var(--shadow);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.site-title-container { display: flex; align-items: center; gap: 15px; }
+.site-logo { width: 56px; height: 56px; object-fit: contain; }
+.site-title { font-size: 26px; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,.3); }
+.nav-menu { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.nav-button {
+  background: rgba(255,255,255,.2); color: #fff; border: 2px solid rgba(255,255,255,.4);
+  padding: 9px 22px; font-size: 16px; font-weight: 600; border-radius: 25px; cursor: pointer; transition: all .3s;
+}
+.nav-button:hover { background: rgba(255,255,255,.35); border-color: #fff; transform: translateY(-2px); }
+.theme-toggle { padding: 9px 14px; font-size: 18px; line-height: 1; }
+.content-area { flex: 1; width: 100%; padding: 40px 60px; max-width: 1600px; margin: 0 auto; position: relative; z-index: 1; }
+.home-screen { display: flex; flex-direction: column; align-items: center; gap: 40px; }
+.welcome-title { font-size: 46px; font-weight: 800; text-align: center; margin-bottom: 10px; }
+.selection-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; width: 100%; max-width: 1100px; }
+.selection-card {
+  background: linear-gradient(135deg, var(--card1), var(--card2)); border: 3px solid var(--red);
+  border-radius: 25px; padding: 50px 40px; text-align: center; cursor: pointer; color: var(--text);
+  transition: all .3s; box-shadow: 0 10px 30px var(--shadow); font: inherit;
+}
+.selection-card:hover, .selection-card:focus-visible { transform: translateY(-8px) scale(1.03); border-color: var(--red2); box-shadow: 0 20px 50px rgba(196,30,58,.4); outline: none; }
+.selection-icon { font-size: 90px; margin-bottom: 20px; }
+.selection-title { font-size: 32px; font-weight: 700; margin-bottom: 14px; }
+.selection-desc { font-size: 19px; color: var(--muted); line-height: 1.6; }
+.calculator-screen { display: none; }
+.back-button {
+  background: var(--red); color: #fff; border: none; padding: 12px 28px; font-size: 18px; font-weight: 600;
+  border-radius: 25px; cursor: pointer; margin-bottom: 28px; transition: all .3s;
+}
+.back-button:hover { background: var(--red2); transform: translateX(-5px); }
+.calculator-container {
+  background: linear-gradient(135deg, var(--card1), var(--card2)); border: 3px solid var(--red);
+  border-radius: 25px; padding: 45px; max-width: 1000px; margin: 0 auto; box-shadow: 0 10px 40px var(--shadow);
+}
+.calculator-title { font-size: 34px; font-weight: 700; text-align: center; margin-bottom: 28px; }
+.form-group { margin-bottom: 22px; }
+.form-label { display: block; font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+.form-select, .form-input {
+  width: 100%; padding: 14px 18px; font-size: 18px; border: 2px solid var(--input-border);
+  border-radius: 12px; background: var(--input-bg); color: var(--text); transition: all .3s;
+}
+.form-select:focus, .form-input:focus { outline: none; border-color: var(--red); box-shadow: 0 0 18px rgba(196,30,58,.3); }
+.form-select option { background: var(--input-bg); color: var(--text); }
+.calculate-button {
+  width: 100%; background: linear-gradient(135deg, var(--red), var(--red2)); color: #fff; border: none;
+  padding: 16px 40px; font-size: 24px; font-weight: 700; border-radius: 50px; cursor: pointer; margin-top: 16px;
+  transition: all .3s; box-shadow: 0 8px 25px rgba(196,30,58,.4);
+}
+.calculate-button:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(196,30,58,.6); }
+.reset-button {
+  width: 100%; background: transparent; color: var(--muted); border: 2px solid var(--input-border);
+  padding: 10px; font-size: 17px; border-radius: 50px; cursor: pointer; margin-top: 12px; transition: all .3s;
+}
+.reset-button:hover { border-color: var(--red); color: var(--text); }
+.result-container { margin-top: 28px; padding: 26px; background: rgba(196,30,58,.1); border: 2px solid var(--red); border-radius: 15px; display: none; }
+.result-container.show { display: block; animation: slideUp .5s ease; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.result-item { font-size: 20px; font-weight: 600; margin-bottom: 14px; padding: 14px; background: var(--item-bg); border-radius: 10px; border-left: 4px solid var(--red); }
+.result-value { color: var(--value); font-size: 24px; font-weight: 700; }
+.pass-status { font-size: 26px; font-weight: 800; text-align: center; padding: 18px; border-radius: 15px; margin-top: 18px; }
+.pass-status.pass { background: rgba(76,175,80,.15); border: 3px solid var(--pass); color: var(--pass); }
+.pass-status.fail { background: rgba(244,67,54,.12); border: 3px solid var(--fail); color: var(--fail); }
+.note { font-size: 15px; color: var(--muted); margin-top: 14px; text-align: center; }
+.footer { background: linear-gradient(135deg, var(--footer1), var(--footer2)); padding: 36px 40px; border-top: 4px solid var(--red); position: relative; z-index: 1; }
+.footer-content { max-width: 1400px; margin: 0 auto; text-align: center; }
+.footer-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; color: var(--red2); }
+.footer-address { font-size: 18px; line-height: 1.8; color: var(--muted); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+.modal-overlay.show { display: flex; }
+.modal-content {
+  background: linear-gradient(135deg, var(--modal1), var(--modal2)); border: 3px solid var(--red);
+  border-radius: 20px; padding: 36px; max-width: 600px; width: 90%; max-height: 80%; overflow-y: auto;
+  position: relative; animation: slideUp .4s ease;
+}
+.modal-close {
+  position: absolute; top: 14px; right: 14px; background: var(--red); color: #fff; border: none;
+  width: 40px; height: 40px; border-radius: 50%; font-size: 24px; cursor: pointer; transition: all .3s;
+}
+.modal-close:hover { background: var(--red2); transform: rotate(90deg); }
+.modal-title { font-size: 30px; font-weight: 700; margin-bottom: 20px; text-align: center; }
+.modal-text { font-size: 18px; color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
+.info-card { background: rgba(196,30,58,.1); border: 2px solid var(--red); border-radius: 12px; padding: 18px; margin-bottom: 14px; }
+.info-name { font-size: 22px; font-weight: 700; color: var(--red2); margin-bottom: 4px; }
+.info-sub { font-size: 18px; color: var(--muted); }
+:root { color-scheme: dark; }
+[data-theme="light"] { color-scheme: light; }
+.big-percent { font-size: 84px; font-weight: 800; text-align: center; color: var(--value); line-height: 1.1; }
+.bar { position: relative; height: 22px; background: var(--item-bg); border: 2px solid var(--input-border); border-radius: 12px; overflow: hidden; margin: 10px 0 6px; }
+.bar-fill { height: 100%; width: 0; background: var(--pass); transition: width .6s ease; }
+.bar-fill.low { background: var(--fail); }
+.bar-mark { position: absolute; top: 0; bottom: 0; left: 60%; width: 3px; background: var(--red); }
+.roster-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; margin-bottom: 8px; background: var(--item-bg); border-radius: 10px; border-left: 4px solid var(--red); }
+.roster-name { font-size: 18px; font-weight: 600; }
+.roster-name small { color: var(--muted); font-weight: 400; margin-left: 6px; }
+.seg { display: flex; gap: 6px; }
+.seg-btn { min-width: 62px; padding: 8px 12px; font-size: 17px; font-weight: 600; border-radius: 10px; cursor: pointer; background: transparent; border: 2px solid var(--input-border); color: var(--text); }
+.seg-btn.s-ok.active { background: var(--pass); border-color: var(--pass); color: #fff; }
+.seg-btn.s-no.active { background: var(--fail); border-color: var(--fail); color: #fff; }
+.seg-btn.s-leave.active { background: #ef9a00; border-color: #ef9a00; color: #fff; }
+.hist-title { font-size: 24px; font-weight: 700; margin: 22px 0 10px; }
+#stu-history { max-height: 360px; overflow-y: auto; border: 2px solid var(--input-border); border-radius: 12px; }
+.hist-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; border-bottom: 1px solid var(--input-border); font-size: 18px; }
+.hist-row:last-child { border-bottom: none; }
+.hist-badge { padding: 2px 14px; border-radius: 8px; color: #fff; font-weight: 600; font-size: 16px; }
+.hist-badge.s-ok { background: var(--pass); }
+.hist-badge.s-no { background: var(--fail); }
+.hist-badge.s-leave { background: #ef9a00; }
+.print-only { display: none; }
+@media print {
+  html[data-theme] { --bg: #fff; --card1: #fff; --card2: #fff; --text: #000; --muted: #333; --item-bg: #f2f2f2; --value: #c41e3a; --input-border: #999; --pass: #2e7d32; --fail: #c62828; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .header, .footer, .back-button, .calculate-button, .reset-button { display: none !important; }
+  .main-wrapper::before { display: none; }
+  .content-area { padding: 0; }
+  .calculator-container { box-shadow: none; border: 2px solid #999; padding: 20px; }
+  #stu-history { max-height: none; overflow: visible; }
+  .print-only { display: block; font-size: 18px; font-weight: 600; margin-bottom: 14px; }
+}
+.table-wrap { overflow-x: auto; margin-top: 14px; }
+.rep-table { border-collapse: collapse; width: 100%; font-size: 15px; }
+.rep-table th, .rep-table td { border: 1px solid var(--input-border); padding: 4px 6px; text-align: center; }
+.rep-table th { background: var(--item-bg); }
+.rep-table .l { text-align: left; white-space: nowrap; }
+.rep-table .ok { color: var(--pass); font-weight: 700; }
+.rep-table .no { color: var(--fail); font-weight: 700; }
+.rep-table .foot td { background: var(--item-bg); font-weight: 600; }
+.badge { display: inline-block; padding: 6px 14px; margin: 4px; border-radius: 20px; background: var(--item-bg); border: 2px solid var(--red); font-weight: 600; font-size: 17px; }
+.cal-row { display: grid; grid-template-columns: 64px repeat(5, 36px); gap: 6px; margin-bottom: 6px; align-items: center; font-size: 15px; color: var(--muted); }
+.cal-cell { height: 28px; border-radius: 6px; background: var(--item-bg); border: 1px solid var(--input-border); }
+.cal-cell.ok { background: var(--pass); border-color: var(--pass); }
+.cal-cell.no { background: var(--fail); border-color: var(--fail); }
+@media print {
+  .no-print { display: none !important; }
+  .table-wrap { overflow: visible; }
+  .rep-table { font-size: 12px; }
+  .rep-table th, .rep-table td { border-color: #666; padding: 2px 4px; }
+  @page { margin: 12mm; }
+}
+.reset-button.danger { border-color: var(--fail); color: var(--fail); }
+.seg-btn:disabled { opacity: .55; cursor: not-allowed; }
+.cal-cell.off { background: #ef9a00; border-color: #ef9a00; }
+.dash-head { position: relative; text-align: center; margin-bottom: 18px; }
+.dash-head .calculator-title { margin-bottom: 6px; }
+.out-btn { position: absolute; top: 0; right: 0; background: transparent; border: 2px solid var(--input-border); color: var(--muted); border-radius: 20px; padding: 6px 14px; font-size: 15px; cursor: pointer; }
+.out-btn:hover { border-color: var(--red); color: var(--text); }
+.tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 22px; }
+.tool-tile { background: var(--item-bg); border: 2px solid var(--input-border); border-radius: 16px; padding: 16px 8px; text-align: center; cursor: pointer; color: var(--text); font-size: 16px; font-weight: 600; transition: all .25s; }
+.tool-tile:hover { border-color: var(--red); transform: translateY(-3px); }
+.tool-tile span { display: block; font-size: 34px; margin-bottom: 6px; }
+.panel-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.action-row .reset-button { margin-top: 0; }
+.danger-zone { margin-top: 22px; border: 2px dashed var(--fail); border-radius: 14px; padding: 10px 14px; }
+.danger-zone summary { cursor: pointer; color: var(--fail); font-weight: 600; font-size: 17px; }
+.rep-table .warn { color: #ef9a00; font-weight: 700; }
+.mini-btn { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: 4px 10px; cursor: pointer; font-size: 14px; }
+.notice-sheet { display: none; }
+@media (max-width: 768px) {
+  .out-btn { position: static; margin-bottom: 8px; }
+  .tool-tile { font-size: 13px; padding: 12px 4px; }
+  .tool-tile span { font-size: 28px; }
+  .panel-row { grid-template-columns: 1fr; gap: 0; }
+}
+@media print {
+  body.print-notice .main-wrapper { display: none !important; }
+  body.print-notice .notice-sheet { display: block; color: #000; background: #fff; font-size: 20px; line-height: 1.9; padding: 10mm; }
+}
+.toast {
+  position: fixed; top: 100px; left: 50%; transform: translateX(-50%); color: #fff; padding: 18px 34px;
+  border-radius: 12px; font-size: 18px; font-weight: 600; z-index: 10000; box-shadow: 0 8px 25px rgba(0,0,0,.3);
+  animation: toastIn .3s ease; max-width: 90%; text-align: center;
+}
+@keyframes toastIn { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+@media (max-width: 768px) {
+  .header { padding: 14px 16px; }
+  .header-content { flex-direction: column; }
+  .site-title-container { flex-direction: column; text-align: center; }
+  .site-title { font-size: 20px; }
+  .nav-menu { justify-content: center; }
+  .welcome-title { font-size: 30px; }
+  .selection-container { grid-template-columns: 1fr; }
+  .calculator-container { padding: 22px; }
+  .calculator-title { font-size: 26px; }
+  .content-area { padding: 28px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="main-wrapper">
+  <header class="header">
     <div class="header-content">
-     <div class="site-title-container"><img src="https://i.ibb.co/84nbML4t/images.jpg" alt="โลโก้วิทยาลัย" class="site-logo" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none';">
-      <h1 class="site-title" id="site-title">เว็บไซต์คำนวณการเข้าร่วมกิจกรรมพัฒนาผู้เรียนอาชีวศึกษา</h1>
-     </div>
-     <nav class="nav-menu"><button class="nav-button" id="executive-btn">👔 ผู้บริหาร</button> <button class="nav-button" id="creator-btn">👨‍💻 ผู้จัดทำ</button> <button class="nav-button" id="contact-btn">📞 ติดต่อเรา</button>
-     </nav>
+      <div class="site-title-container">
+        <img src="https://i.ibb.co/84nbML4t/images.jpg" alt="โลโก้วิทยาลัย" class="site-logo" onerror="this.style.display='none'">
+        <h1 class="site-title">เว็บไซต์คำนวณการเข้าร่วมกิจกรรมพัฒนาผู้เรียนอาชีวศึกษา</h1>
+      </div>
+      <nav class="nav-menu">
+        <button class="nav-button" id="executive-btn">👔 ผู้บริหาร</button>
+        <button class="nav-button" id="creator-btn">👨‍💻 ผู้จัดทำ</button>
+        <button class="nav-button" id="contact-btn">📞 ติดต่อเรา</button>
+        <button class="nav-button" id="install-btn" style="display:none">📲 ติดตั้งแอป</button>
+        <button class="nav-button theme-toggle" id="theme-btn" aria-label="สลับธีมมืด/สว่าง" title="สลับธีมมืด/สว่าง">☀️</button>
+      </nav>
     </div>
-   </header>
-   <main class="content-area">
+  </header>
+
+  <main class="content-area">
     <div class="home-screen" id="home-screen">
-     <h2 class="welcome-title">🎓 ยินดีต้อนรับสู่ระบบคำนวณการเข้าร่วมกิจกรรม</h2>
-     <div class="selection-container">
-      <div class="selection-card" id="student-card">
-       <div class="selection-icon">
-        🎒
-       </div>
-       <h3 class="selection-title" id="student-button-text">สำหรับนักเรียน/นักศึกษา</h3>
-       <p class="selection-desc">คำนวณจำนวนครั้งที่ต้องเข้าร่วมกิจกรรม และจำนวนครั้งที่สามารถขาดได้</p>
+      <h2 class="welcome-title">🎓 ยินดีต้อนรับสู่ระบบคำนวณการเข้าร่วมกิจกรรม</h2>
+      <div class="selection-container">
+        <button class="selection-card" id="student-card">
+          <div class="selection-icon">🎒</div>
+          <h3 class="selection-title">สำหรับนักเรียน/นักศึกษา</h3>
+          <p class="selection-desc">คำนวณจำนวนครั้งที่ต้องเข้าร่วมกิจกรรม และจำนวนครั้งที่สามารถขาดได้</p>
+        </button>
+        <button class="selection-card" id="teacher-card">
+          <div class="selection-icon">👨‍🏫</div>
+          <h3 class="selection-title">สำหรับคณะอาจารย์</h3>
+          <p class="selection-desc">ตรวจสอบและคำนวณผลการเข้าร่วมกิจกรรมของนักเรียน/นักศึกษา</p>
+        </button>
       </div>
-      <div class="selection-card" id="teacher-card">
-       <div class="selection-icon">
-        👨‍🏫
-       </div>
-       <h3 class="selection-title" id="teacher-button-text">สำหรับคณะอาจารย์</h3>
-       <p class="selection-desc">ตรวจสอบและคำนวณผลารเข้าร่วมกิจกรรมของนักเรียน/นักศึกษา</p>
-      </div>
-     </div>
     </div>
-    <div class="calculator-screen" id="student-screen"><button class="back-button" id="student-back-btn">← กลับหน้าหลัก</button>
-     <div class="calculator-container">
-      <h2 class="calculator-title">📊 คำนวณสำหรับนักเรียน/นักศึกษา</h2>
-      <div class="form-group"><label for="student-level" class="form-label">🎓 ระดับชั้น</label> <select id="student-level" class="form-select"> <option value="">-- เลือกระดับชั้น --</option> <option value="pvs">ปวส. (16 สัปดาห์)</option> <option value="pvc">ปวช. (18 สัปดาห์)</option> </select>
+
+    <!-- ล็อกอิน -->
+    <div class="calculator-screen" id="login-screen">
+      <button class="back-button" id="login-back-btn">← กลับหน้าหลัก</button>
+      <div class="calculator-container" style="max-width:560px">
+        <h2 class="calculator-title" id="login-title"></h2>
+        <div class="form-group"><label class="form-label" id="login-user-label" for="login-user"></label><input class="form-input" id="login-user" autocomplete="off"></div>
+        <div class="form-group"><label class="form-label" id="login-pass-label" for="login-pass"></label><input class="form-input" id="login-pass" type="password" autocomplete="off"></div>
+        <button class="calculate-button" id="login-btn">🔐 เข้าสู่ระบบ</button>
+        <button class="reset-button" id="login-calc-btn">ใช้เครื่องคำนวณโดยไม่ต้องล็อกอิน</button>
       </div>
-      <div class="form-group"><label for="student-activity" class="form-label">🎯 เลือกกิจกรรม</label> <select id="student-activity" class="form-select"> <option value="">-- เลือกกิจกรรม --</option> <option value="flag">🚩 เข้าแถวเคารพธงชาติ (จันทร์-ศุกร์)</option> <option value="club">🎭 กิจกรรมชมรม (ทุกวันพุธ)</option> <option value="scout">⚜️ กิจกรรมลูกเสือ-เนตรนารี (ทุกวันพุธ)</option> </select>
-      </div><button class="calculate-button" id="student-calculate-btn">🧮 คำนวณผล</button>
-      <div class="result-container" id="student-result">
-       <div class="result-item">
-        📅 จำนวนสัปดาห์ทั้งหมด: <span class="result-value" id="student-total-weeks"></span> สัปดาห์
-       </div>
-       <div class="result-item">
-        🎯 จำนวนครั้งที่ต้องเข้าร่วมเพื่อผ่าน 60%: <span class="result-value" id="student-required"></span> ครั้ง
-       </div>
-       <div class="result-item">
-        ❌ จำนวนครั้งที่สามารถขาดได้: <span class="result-value" id="student-can-miss"></span> ครั้ง
-       </div>
-      </div>
-     </div>
     </div>
-    <div class="calculator-screen" id="teacher-screen"><button class="back-button" id="teacher-back-btn">← กลับหน้าหลัก</button>
-     <div class="calculator-container">
-      <h2 class="calculator-title">👨‍🏫 ตรวจสอบสำหรับคณะอาจารย์</h2>
-      <div class="form-group"><label for="teacher-level" class="form-label">🎓 ระดับชั้น</label> <select id="teacher-level" class="form-select"> <option value="">-- เลือกระดับชั้น --</option> <option value="pvs">ปวส. (16 สัปดาห์)</option> <option value="pvc">ปวช. (18 สัปดาห์)</option> </select>
+
+    <!-- หน้านักศึกษาดูผลของตัวเอง -->
+    <div class="calculator-screen" id="student-dash">
+      <div class="calculator-container">
+        <p class="print-only" id="print-head"></p>
+        <h2 class="calculator-title">📊 ผลการเข้าแถวของฉัน</h2>
+        <p class="note" id="stu-name" style="font-size:20px;margin:-10px 0 20px"></p>
+        <div id="stu-stats">
+          <div class="big-percent"><span id="stu-percent">0</span>%</div>
+          <div class="bar"><div class="bar-fill" id="stu-bar"></div><div class="bar-mark"></div></div>
+          <p class="note" style="margin:0 0 16px">เส้นแดง = เกณฑ์ผ่าน 60%</p>
+          <div class="pass-status" id="stu-status" style="margin-bottom:20px"></div>
+          <div class="result-item">📅 เช็คชื่อไปแล้ว: <span class="result-value" id="stu-held"></span> / <span id="stu-total"></span> ครั้ง</div>
+          <div class="result-item">✅ มา: <span class="result-value" id="stu-attended"></span> ครั้ง</div>
+          <div class="result-item">❌ ขาด: <span class="result-value" id="stu-absent"></span> ครั้ง</div>
+          <div class="result-item">🎯 ต้องมาอย่างน้อยทั้งเทอม (60%): <span class="result-value" id="stu-required"></span> ครั้ง</div>
+          <div class="result-item">➕ ต้องมาอีก: <span class="result-value" id="stu-need"></span> ครั้ง (เหลือวันเช็คอีก <span id="stu-remaining"></span> ครั้ง)</div>
+          <div class="result-item">🔥 มาติดต่อกัน: <span class="result-value" id="stu-streak">0</span> วัน</div>
+          <div class="result-item">🛡️ ขาดได้อีกไม่เกิน: <span class="result-value" id="stu-quota">0</span> วัน (แล้วยังผ่าน 60%)</div>
+          <div class="result-item">🔮 ถ้าขาดอีก <input type="number" id="stu-whatif" class="form-input" min="0" value="0" style="width:90px;display:inline-block;padding:6px 10px"> วัน → ปลายเทอมได้ <span class="result-value" id="stu-whatif-out"></span></div>
+          <h3 class="hist-title">🏅 ป้ายความสำเร็จ</h3>
+          <div id="stu-badges"></div>
+          <h3 class="hist-title">📆 ปฏิทินการเข้าแถว (จ-ศ)</h3>
+          <div id="stu-cal"></div>
+          <h3 class="hist-title">🗓️ ประวัติรายวัน</h3>
+          <div id="stu-history"></div>
+        </div>
+        <button class="calculate-button" id="stu-refresh-btn">🔄 รีเฟรชข้อมูล</button>
+        <button class="reset-button" id="stu-print-btn">🖨️ พิมพ์ / บันทึกเป็น PDF</button>
+        <button class="reset-button" id="stu-calc-btn">🧮 เครื่องคำนวณ</button>
+        <button class="reset-button" id="stu-logout-btn">ออกจากระบบ</button>
       </div>
-      <div class="form-group"><label for="teacher-activity" class="form-label">🎯 เลือกกิจกรรม</label> <select id="teacher-activity" class="form-select"> <option value="">-- เลือกกิจกรรม --</option> <option value="flag">🚩 เข้าแถวเคารพธงชาติ (จันทร์-ศุกร์)</option> <option value="club">🎭 กิจกรรมชมรม (ทุกวันพุธ)</option> <option value="scout">⚜️ กิจกรรมลูกเสือ-เนตรนารี (ทุกวันพุธ)</option> </select>
-      </div>
-      <div class="form-group"><label for="teacher-cancelled" class="form-label">🌧️ จำนวนครั้งที่ไม่ได้จัดกิจกรรม (เช่น ฝนตก)</label> <input type="number" id="teacher-cancelled" class="form-input" placeholder="กรอกจำนวนครั้งที่ไม่ได้จัด" min="0" value="0">
-      </div>
-      <div class="form-group"><label for="teacher-attended" class="form-label">✅ จำนวนครั้งที่นักศึกษาเข้าร่วม</label> <input type="number" id="teacher-attended" class="form-input" placeholder="กรอกจำนวนครั้งที่เข้าร่วม" min="0">
-      </div><button class="calculate-button" id="teacher-calculate-btn">🔍 ตรวจสอบผล</button>
-      <div class="result-container" id="teacher-result">
-       <div class="result-item">
-        📅 จำนวนสัปดาห์ทั้งหมด: <span class="result-value" id="teacher-total-weeks"></span> สัปดาห์
-       </div>
-       <div class="result-item">
-        🌧️ จำนวนครั้งที่ไม่ได้จัดกิจกรรม: <span class="result-value" id="teacher-cancelled-display"></span> ครั้ง
-       </div>
-       <div class="result-item">
-        📊 จำนวนครั้งที่ต้องจัดจริง: <span class="result-value" id="teacher-actual-total"></span> ครั้ง
-       </div>
-       <div class="result-item">
-        ✅ จำนวนครั้งที่นักศึกษาเข้าร่วม: <span class="result-value" id="teacher-attended-display"></span> ครั้ง
-       </div>
-       <div class="result-item">
-        🎯 จำนวนครั้งที่ต้องเข้าร่วมเพื่อผ่าน 60%: <span class="result-value" id="teacher-required"></span> ครั้ง
-       </div>
-       <div class="result-item">
-        📊 เปอร์เซ็นต์การเข้าร่วม: <span class="result-value" id="teacher-percentage"></span>%
-       </div>
-       <div class="pass-status" id="teacher-status"></div>
-      </div>
-     </div>
     </div>
-   </main>
-   <footer class="footer">
+
+    <!-- หน้าครูเช็คชื่อ -->
+    <div class="calculator-screen" id="teacher-dash">
+      <div class="calculator-container">
+        <div class="dash-head">
+          <button class="out-btn" id="tch-logout-btn">ออกจากระบบ</button>
+          <h2 class="calculator-title">📝 เช็คชื่อเข้าแถว</h2>
+          <p class="note" id="tch-name" style="font-size:20px;margin:0"></p>
+        </div>
+        <div class="tool-grid">
+          <button class="tool-tile" id="tch-report-btn"><span>📋</span>รายงาน / พิมพ์ตาราง</button>
+          <button class="tool-tile" id="tch-risk-btn"><span>⚠️</span>นักศึกษาเสี่ยง</button>
+          <button class="tool-tile" id="tch-calc-btn"><span>🧮</span>เครื่องคำนวณ</button>
+        </div>
+        <div class="panel-row">
+          <div class="form-group"><label class="form-label" for="tch-room">🏫 ห้อง</label><select class="form-select" id="tch-room"></select></div>
+          <div class="form-group"><label class="form-label" for="tch-date">📅 วันที่</label><input type="date" class="form-input" id="tch-date"></div>
+        </div>
+        <p class="note" id="tch-info" style="margin:0 0 12px"></p>
+        <div id="tch-list"></div>
+        <div class="result-item" id="tch-summary"></div>
+        <div class="action-row">
+          <button class="reset-button" id="tch-allok-btn">✅ ตั้งทุกคนเป็น "มา"</button>
+          <button class="reset-button" id="tch-cancel-btn">🌧️ วันนี้งดกิจกรรม</button>
+        </div>
+        <button class="calculate-button" id="tch-save-btn">💾 บันทึกการเช็คชื่อ</button>
+        <details class="danger-zone">
+          <summary>⚙️ ตัวเลือกขั้นสูง (รีเซ็ตข้อมูล)</summary>
+          <button class="reset-button danger" id="tch-resetday-btn">🗑️ ล้างข้อมูลวันนี้ (เพื่อเช็คใหม่)</button>
+          <button class="reset-button danger" id="tch-resetroom-btn">⚠️ รีเซ็ตทั้งห้อง (ลบข้อมูลเช็คชื่อทุกวัน)</button>
+        </details>
+      </div>
+    </div>
+
+    <!-- รายงานรายวัน (ครู) -->
+    <div class="calculator-screen" id="report-screen">
+      <div class="calculator-container" style="max-width:1200px">
+        <button class="back-button no-print" id="rep-back-btn">← กลับ</button>
+        <h2 class="calculator-title no-print">📋 รายงานเช็คชื่อรายวัน</h2>
+        <p class="print-only" id="rep-head"></p>
+        <div class="no-print" style="display:flex;gap:12px;flex-wrap:wrap">
+          <select class="form-select" id="rep-room" style="flex:1;min-width:140px"></select>
+          <input type="month" class="form-input" id="rep-month" style="flex:1;min-width:170px">
+        </div>
+        <div class="table-wrap"><table class="rep-table" id="rep-table"></table></div>
+        <p class="note" id="rep-note"></p>
+        <button class="calculate-button no-print" id="rep-print-btn">🖨️ พิมพ์ตาราง (เลือกแนวนอนได้)</button>
+      </div>
+    </div>
+
+    <!-- นักศึกษาเสี่ยง (ครู) -->
+    <div class="calculator-screen" id="risk-screen">
+      <div class="calculator-container" style="max-width:1100px">
+        <button class="back-button no-print" id="risk-back-btn">← กลับ</button>
+        <h2 class="calculator-title no-print">⚠️ นักศึกษาที่ควรติดตาม</h2>
+        <p class="print-only" id="risk-head"></p>
+        <div class="no-print"><select class="form-select" id="risk-room"></select></div>
+        <div class="table-wrap"><table class="rep-table" id="risk-table"></table></div>
+        <p class="note" id="risk-note"></p>
+        <button class="calculate-button no-print" id="risk-print-btn">🖨️ พิมพ์รายชื่อ</button>
+      </div>
+    </div>
+
+    <!-- นักเรียน -->
+    <div class="calculator-screen" id="student-screen">
+      <button class="back-button" id="student-back-btn">← กลับหน้าหลัก</button>
+      <div class="calculator-container">
+        <h2 class="calculator-title">📊 คำนวณสำหรับนักเรียน/นักศึกษา</h2>
+        <div class="form-group">
+          <label for="student-level" class="form-label">🎓 ระดับชั้น</label>
+          <select id="student-level" class="form-select">
+            <option value="">-- เลือกระดับชั้น --</option>
+            <option value="pvs">ปวส. (16 สัปดาห์)</option>
+            <option value="pvc">ปวช. (18 สัปดาห์)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="student-activity" class="form-label">🎯 เลือกกิจกรรม</label>
+          <select id="student-activity" class="form-select">
+            <option value="">-- เลือกกิจกรรม --</option>
+            <option value="flag">🚩 เข้าแถวเคารพธงชาติ (จันทร์-ศุกร์)</option>
+            <option value="club">🎭 กิจกรรมชมรม (ทุกวันพุธ)</option>
+            <option value="scout">⚜️ กิจกรรมลูกเสือ-เนตรนารี (ทุกวันพุธ)</option>
+          </select>
+        </div>
+        <button class="calculate-button" id="student-calculate-btn">🧮 คำนวณผล</button>
+        <button class="reset-button" id="student-reset-btn">ล้างค่า</button>
+        <div class="result-container" id="student-result">
+          <div class="result-item">📅 จำนวนสัปดาห์ทั้งหมด: <span class="result-value" id="student-total-weeks"></span> สัปดาห์</div>
+          <div class="result-item">🔢 จำนวนครั้งทั้งหมด: <span class="result-value" id="student-total-times"></span> ครั้ง</div>
+          <div class="result-item">🎯 จำนวนครั้งที่ต้องเข้าร่วมเพื่อผ่าน 60%: <span class="result-value" id="student-required"></span> ครั้ง</div>
+          <div class="result-item">❌ จำนวนครั้งที่สามารถขาดได้: <span class="result-value" id="student-can-miss"></span> ครั้ง</div>
+          <p class="note">* เป็นการคำนวณโดยประมาณ ไม่หักวันหยุดนักขัตฤกษ์หรือวันที่งดกิจกรรม</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- อาจารย์ -->
+    <div class="calculator-screen" id="teacher-screen">
+      <button class="back-button" id="teacher-back-btn">← กลับหน้าหลัก</button>
+      <div class="calculator-container">
+        <h2 class="calculator-title">👨‍🏫 ตรวจสอบสำหรับคณะอาจารย์</h2>
+        <div class="form-group">
+          <label for="teacher-level" class="form-label">🎓 ระดับชั้น</label>
+          <select id="teacher-level" class="form-select">
+            <option value="">-- เลือกระดับชั้น --</option>
+            <option value="pvs">ปวส. (16 สัปดาห์)</option>
+            <option value="pvc">ปวช. (18 สัปดาห์)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="teacher-activity" class="form-label">🎯 เลือกกิจกรรม</label>
+          <select id="teacher-activity" class="form-select">
+            <option value="">-- เลือกกิจกรรม --</option>
+            <option value="flag">🚩 เข้าแถวเคารพธงชาติ (จันทร์-ศุกร์)</option>
+            <option value="club">🎭 กิจกรรมชมรม (ทุกวันพุธ)</option>
+            <option value="scout">⚜️ กิจกรรมลูกเสือ-เนตรนารี (ทุกวันพุธ)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="teacher-cancelled" class="form-label">🌧️ จำนวนครั้งที่ไม่ได้จัดกิจกรรม (เช่น ฝนตก)</label>
+          <input type="number" id="teacher-cancelled" class="form-input" placeholder="กรอกจำนวนครั้งที่ไม่ได้จัด" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label for="teacher-attended" class="form-label">✅ จำนวนครั้งที่นักศึกษาเข้าร่วม</label>
+          <input type="number" id="teacher-attended" class="form-input" placeholder="กรอกจำนวนครั้งที่เข้าร่วม" min="0">
+        </div>
+        <button class="calculate-button" id="teacher-calculate-btn">🔍 ตรวจสอบผล</button>
+        <button class="reset-button" id="teacher-reset-btn">ล้างค่า</button>
+        <div class="result-container" id="teacher-result">
+          <div class="result-item">📅 จำนวนสัปดาห์ทั้งหมด: <span class="result-value" id="teacher-total-weeks"></span> สัปดาห์</div>
+          <div class="result-item">🌧️ จำนวนครั้งที่ไม่ได้จัดกิจกรรม: <span class="result-value" id="teacher-cancelled-display"></span> ครั้ง</div>
+          <div class="result-item">📊 จำนวนครั้งที่จัดจริง: <span class="result-value" id="teacher-actual-total"></span> ครั้ง</div>
+          <div class="result-item">✅ จำนวนครั้งที่นักศึกษาเข้าร่วม: <span class="result-value" id="teacher-attended-display"></span> ครั้ง</div>
+          <div class="result-item">🎯 จำนวนครั้งที่ต้องเข้าร่วมเพื่อผ่าน 60%: <span class="result-value" id="teacher-required"></span> ครั้ง</div>
+          <div class="result-item">📈 เปอร์เซ็นต์การเข้าร่วม: <span class="result-value" id="teacher-percentage"></span>%</div>
+          <div class="pass-status" id="teacher-status"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
     <div class="footer-content">
-     <h3 class="footer-title">🏫 วิทยาลัยเทคนิคเพชรบูรณ์</h3>
-     <p class="footer-address" id="footer-address">212 ถนนสระบุรี-หล่มสัก ตำบลในเมือง อำเภอเมืองเพชรบูรณ์<br>
-      จังหวัดเพชรบูรณ์ 67000</p>
+      <h3 class="footer-title">🏫 วิทยาลัยเทคนิคเพชรบูรณ์</h3>
+      <p class="footer-address">212 ถนนสระบุรี-หล่มสัก ตำบลในเมือง อำเภอเมืองเพชรบูรณ์<br>จังหวัดเพชรบูรณ์ 67000</p>
     </div>
-   </footer>
-   <div class="modal-overlay" id="executive-modal">
-    <div class="modal-content"><button class="modal-close" onclick="closeModal('executive-modal')">��</button>
-     <h2 class="modal-title">👔 ผู้บริหารวิทยาลัยเทคนิคเพชรบูรณ์</h2>
-     <div class="executive-card">
-      <div class="executive-name">
-       ผู้อำนวยการวิทยาลัย
+  </footer>
+
+  <div class="modal-overlay" id="creator-modal">
+    <div class="modal-content">
+      <button class="modal-close" data-close="creator-modal" aria-label="ปิด">×</button>
+      <h2 class="modal-title">👨‍💻 ผู้จัดทำโครงงาน</h2>
+      <div class="info-card">
+        <div class="info-name">นายปิยวัฒน์ ประเทศ</div>
+        <div class="info-sub">นักศึกษาวิทยาลัยเทคนิคเพชรบูรณ์</div>
       </div>
-      <div class="executive-position">
-       หัวหน้าสถานศึกษา
-      </div>
-     </div>
-     <div class="executive-card">
-      <div class="executive-name">
-       รองผู้อำนวยการฝ่ายบริหารทรัพยากร
-      </div>
-      <div class="executive-position">
-       บริหารด้านบุคคลและงบประมาณ
-      </div>
-     </div>
-     <div class="executive-card">
-      <div class="executive-name">
-       รองผู้อำนวยการฝ่ายวิชาการ
-      </div>
-      <div class="executive-position">
-       บริหารด้านหลักสูตรและการสอน
-      </div>
-     </div>
-     <div class="executive-card">
-      <div class="executive-name">
-       รองผู้อำนวยการฝ่ายพัฒนากิจการนักเรียนนักศึกษา
-      </div>
-      <div class="executive-position">
-       ดูแลกิจกรรมและพัฒนาผู้เรียน
-      </div>
-     </div>
+      <p class="modal-text" style="margin-top:20px;">📚 โครงงานนี้จัดทำขึ้นเพื่อช่วยให้นักเรียน/นักศึกษาและคณะอาจารย์สามารถคำนวณการเข้าร่วมกิจกรรมพัฒนาผู้เรียนได้อย่างสะดวกและรวดเร็ว</p>
+      <p class="modal-text">🎯 โครงงานเว็บไซต์คำนวณการเข้าร่วมกิจกรรมพัฒนาผู้เรียนอาชีวศึกษา</p>
     </div>
-   </div>
-   <div class="modal-overlay" id="creator-modal">
-    <div class="modal-content"><button class="modal-close" onclick="closeModal('creator-modal')">×</button>
-     <h2 class="modal-title">👨‍💻 ผู้จัดทำโครงงาน</h2>
-     <div class="executive-card">
-      <div class="executive-name">
-       นายปิยวัฒน์ ประเทศ
-      </div>
-      <div class="executive-position">
-       นักศึกษาวิทยาลัยเทคนิคเพชรบูรณ์
-      </div>
-     </div>
-     <p class="modal-text" style="margin-top: 20px;">📚 โครงงานนี้จัดทำขึ้นเพื่อช่วยให้นักเรียน/นักศึกษาและคณะอาจารย์สามารถคำนวณการข้าร่วมกิจกรรมพัฒนาผู้เรียนได้อย่างสะดวกและรวดเร็ว</p>
-     <p class="modal-text">🎯 โครงงานเว็บไซต์คำนวณการเข้าร่วมกิจกรรมพัฒาผู้เรียนอาชีวศึกษา</p>
-    </div>
-   </div>
-   <div class="modal-overlay" id="contact-modal">
-    <div class="modal-content"><button class="modal-close" onclick="closeModal('contact-modal')">×</button>
-     <h2 class="modal-title">📞 ติดต่อเรา</h2>
-     <p class="modal-text"><strong>🏫 วิทยาลัยเทคนิคเพชรบูรณ์</strong></p>
-     <p class="modal-text">📍 ที่อยู่: 212 ถนนสระบุรี-หล่มสัก ตำบลในเมือง อำเภอเมืองเพชรบูรณ์ จังหวัดเพชรบูรณ์ 67000</p>
-     <p class="modal-text">☎ โทรศัพท์: 056-711-234</p>
-     <p class="modal-text">📧 อีเมล: info@pbtc.ac.th</p>
-     <p class="modal-text">🌐 เว็บไซต์: www.pbtc.ac.th</p>
-     <p class="modal-text" style="margin-top: 20px;">⏰ เวลาทำการ: จันทร์ - ศุกร์ เวลา 08:00 - 16:30 น.</p>
-    </div>
-   </div>
   </div>
-  <script>
-    const defaultConfig = {
-      site_title: 'เว็บไซต์คำนวณการเข้าร่วมกิจกรรมพัฒนาผู้เรียนอาชีวศึกษา',
-      student_button_text: 'สำหรับนักเรียน/นักศึกษา',
-      teacher_button_text: 'สำหรับคณะอาจารย์',
-      footer_address: '212 ถนนสระบุรี-หล่มสัก ตำบลในเมือง อำเภอเมืองเพชรบูรณ์\nจังหวัดเพชรบูรณ์ 67000'
-    };
 
-    document.getElementById('student-card').addEventListener('click', () => {
-      document.getElementById('home-screen').style.display = 'none';
-      document.getElementById('student-screen').style.display = 'block';
-    });
+  <div class="modal-overlay" id="contact-modal">
+    <div class="modal-content">
+      <button class="modal-close" data-close="contact-modal" aria-label="ปิด">×</button>
+      <h2 class="modal-title">📞 ติดต่อเรา</h2>
+      <p class="modal-text"><strong>🏫 วิทยาลัยเทคนิคเพชรบูรณ์</strong></p>
+      <p class="modal-text">📍 ที่อยู่: 212 ถนนสระบุรี-หล่มสัก ตำบลในเมือง อำเภอเมืองเพชรบูรณ์ จังหวัดเพชรบูรณ์ 67000</p>
+      <!-- ตรวจสอบเบอร์โทร/อีเมลกับแหล่งทางการก่อนส่งงาน -->
+      <p class="modal-text">☎ โทรศัพท์: 056-711-234</p>
+      <p class="modal-text">📧 อีเมล: info@pbtc.ac.th</p>
+      <p class="modal-text">🌐 เว็บไซต์: www.pbtc.ac.th</p>
+      <p class="modal-text" style="margin-top:20px;">⏰ เวลาทำการ: จันทร์ - ศุกร์ เวลา 08:00 - 16:30 น.</p>
+    </div>
+  </div>
+</div>
 
-    document.getElementById('teacher-card').addEventListener('click', () => {
-      document.getElementById('home-screen').style.display = 'none';
-      document.getElementById('teacher-screen').style.display = 'block';
-    });
+<script>
+const $ = (id) => document.getElementById(id);
 
-    document.getElementById('student-back-btn').addEventListener('click', () => {
-      document.getElementById('student-screen').style.display = 'none';
-      document.getElementById('home-screen').style.display = 'flex';
-      document.getElementById('student-result').classList.remove('show');
-    });
+/* ---------- ธีม ---------- */
+function applyThemeIcon() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  $('theme-btn').textContent = dark ? '☀️' : '🌙'; // แสดงไอคอนของธีมที่จะสลับไป
+}
+$('theme-btn').addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('theme', next); } catch (e) {}
+  applyThemeIcon();
+});
+applyThemeIcon();
 
-    document.getElementById('teacher-back-btn').addEventListener('click', () => {
-      document.getElementById('teacher-screen').style.display = 'none';
-      document.getElementById('home-screen').style.display = 'flex';
-      document.getElementById('teacher-result').classList.remove('show');
-    });
+/* ---------- เปลี่ยนหน้า ---------- */
+const SCREENS = ['home-screen', 'login-screen', 'student-dash', 'teacher-dash', 'student-screen', 'teacher-screen', 'report-screen', 'risk-screen'];
+function show(screen) {
+  SCREENS.forEach((id) => { $(id).style.display = 'none'; });
+  $(screen).style.display = screen === 'home-screen' ? 'flex' : 'block';
+  window.scrollTo(0, 0);
+}
+$('student-card').addEventListener('click', () => openLogin('student'));
+$('teacher-card').addEventListener('click', () => openLogin('teacher'));
+function calcBack(role) {
+  $(role + '-result').classList.remove('show');
+  if (session && session.role === role) show(role + '-dash');
+  else show('home-screen');
+}
+$('student-back-btn').addEventListener('click', () => calcBack('student'));
+$('teacher-back-btn').addEventListener('click', () => calcBack('teacher'));
 
-    document.getElementById('executive-btn').addEventListener('click', () => {
-      window.open('https://www.pbntc.ac.th/web_pbntc68/ita/executive.html', '_blank', 'noopener,noreferrer');
-    });
+/* ---------- เมนู / modal ---------- */
+$('executive-btn').addEventListener('click', () => {
+  window.open('https://www.pbntc.ac.th/web_pbntc68/ita/executive.html', '_blank', 'noopener,noreferrer');
+});
+$('creator-btn').addEventListener('click', () => $('creator-modal').classList.add('show'));
+$('contact-btn').addEventListener('click', () => $('contact-modal').classList.add('show'));
+document.querySelectorAll('[data-close]').forEach((b) => {
+  b.addEventListener('click', () => $(b.dataset.close).classList.remove('show'));
+});
+document.querySelectorAll('.modal-overlay').forEach((o) => {
+  o.addEventListener('click', (e) => { if (e.target === o) o.classList.remove('show'); });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.show').forEach((o) => o.classList.remove('show'));
+});
 
-    document.getElementById('creator-btn').addEventListener('click', () => {
-      document.getElementById('creator-modal').classList.add('show');
-    });
+/* ---------- ตัวช่วยคำนวณ ---------- */
+function getTotals(level, activity) {
+  const weeks = level === 'pvs' ? 16 : 18;
+  const total = activity === 'flag' ? weeks * 5 : weeks;
+  return { weeks, total };
+}
 
-    document.getElementById('contact-btn').addEventListener('click', () => {
-      document.getElementById('contact-modal').classList.add('show');
-    });
+function showNotification(message, type) {
+  const n = document.createElement('div');
+  n.className = 'toast';
+  n.style.background = type === 'error' ? '#f44336' : '#4CAF50';
+  n.textContent = message;
+  document.body.appendChild(n);
+  setTimeout(() => n.remove(), 3000);
+}
 
-    function closeModal(modalId) {
-      document.getElementById(modalId).classList.remove('show');
+/* ---------- นักเรียน ---------- */
+$('student-calculate-btn').addEventListener('click', () => {
+  const level = $('student-level').value;
+  const activity = $('student-activity').value;
+  if (!level || !activity) { showNotification('กรุณาเลือกระดับชั้นและกิจกรรม', 'error'); return; }
+
+  const { weeks, total } = getTotals(level, activity);
+  const required = Math.ceil(total * 0.6);
+
+  $('student-total-weeks').textContent = weeks;
+  $('student-total-times').textContent = total;
+  $('student-required').textContent = required;
+  $('student-can-miss').textContent = total - required;
+  $('student-result').classList.add('show');
+});
+$('student-reset-btn').addEventListener('click', () => {
+  $('student-level').value = '';
+  $('student-activity').value = '';
+  $('student-result').classList.remove('show');
+});
+
+/* ---------- อาจารย์ ---------- */
+$('teacher-calculate-btn').addEventListener('click', () => {
+  const level = $('teacher-level').value;
+  const activity = $('teacher-activity').value;
+  const attended = parseInt($('teacher-attended').value, 10) || 0;
+  const cancelled = parseInt($('teacher-cancelled').value, 10) || 0;
+
+  if (!level || !activity) { showNotification('กรุณาเลือกระดับชั้นและกิจกรรม', 'error'); return; }
+  if (attended < 0 || cancelled < 0) { showNotification('กรุณากรอกจำนวนที่ไม่ติดลบ', 'error'); return; }
+
+  const { weeks, total } = getTotals(level, activity);
+  if (cancelled >= total) { showNotification('จำนวนครั้งที่ไม่ได้จัด ต้องน้อยกว่าจำนวนกิจกรรมทั้งหมด (' + total + ' ครั้ง)', 'error'); return; }
+
+  const actualTotal = total - cancelled;
+  if (attended > actualTotal) { showNotification('จำนวนครั้งที่เข้าร่วมมากกว่าจำนวนครั้งที่จัดจริง (' + actualTotal + ' ครั้ง)', 'error'); return; }
+
+  const required = Math.ceil(actualTotal * 0.6);
+  const percentage = ((attended / actualTotal) * 100).toFixed(2);
+  const passed = attended >= required;
+
+  $('teacher-total-weeks').textContent = weeks;
+  $('teacher-cancelled-display').textContent = cancelled;
+  $('teacher-actual-total').textContent = actualTotal;
+  $('teacher-attended-display').textContent = attended;
+  $('teacher-required').textContent = required;
+  $('teacher-percentage').textContent = percentage;
+
+  const st = $('teacher-status');
+  if (passed) {
+    st.className = 'pass-status pass';
+    st.textContent = '✅ นักศึกษาผ่านเกณฑ์ 60%';
+  } else {
+    st.className = 'pass-status fail';
+    st.textContent = '❌ นักศึกษาไม่ผ่านเกณฑ์ (ต้องเข้าร่วมอย่างน้อย ' + required + ' ครั้ง)';
+  }
+  $('teacher-result').classList.add('show');
+});
+$('teacher-reset-btn').addEventListener('click', () => {
+  $('teacher-level').value = '';
+  $('teacher-activity').value = '';
+  $('teacher-cancelled').value = 0;
+  $('teacher-attended').value = '';
+  $('teacher-result').classList.remove('show');
+});
+
+/* ================= ระบบล็อกอิน + เช็คชื่อ (เชื่อม Google Apps Script) ================= */
+// ★ วาง URL เว็บแอปที่ได้จากการ Deploy ตรงนี้ (ขึ้นต้นด้วย https://script.google.com/macros/s/ ... /exec)
+const API_URL = 'https://script.google.com/macros/s/AKfycbx0hE13IUmALK-DDVcLTU71ZvDyaT89Eu3m852LbHutDwY4nralZdcmDC1Zul3jH2gw/exec';
+
+let loginRole = null;
+let session = null;
+try { session = JSON.parse(sessionStorage.getItem('session')); } catch (e) {}
+function saveSession(s) {
+  session = s;
+  try { s ? sessionStorage.setItem('session', JSON.stringify(s)) : sessionStorage.removeItem('session'); } catch (e) {}
+}
+async function api(payload) {
+  if (API_URL.indexOf('script.google.com') < 0) throw new Error('ยังไม่ได้ใส่ API_URL ในโค้ด');
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+  return res.json();
+}
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function setBusy(btn, busy, text) { btn.disabled = busy; btn.textContent = text; }
+function todayStr() { return new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
+
+/* --- ล็อกอิน --- */
+function openLogin(role) {
+  if (session && session.role === role) { enterDash(); return; }
+  loginRole = role;
+  const stu = role === 'student';
+  $('login-title').textContent = stu ? '🎒 เข้าสู่ระบบนักเรียน/นักศึกษา' : '👨‍🏫 เข้าสู่ระบบครูที่ปรึกษา';
+  $('login-user-label').textContent = stu ? 'รหัสนักศึกษา' : 'ชื่อครู';
+  $('login-pass-label').textContent = stu ? 'PIN' : 'รหัสผ่าน';
+  $('login-user').value = '';
+  $('login-pass').value = '';
+  show('login-screen');
+}
+async function doLogin() {
+  const user = $('login-user').value.trim();
+  const pass = $('login-pass').value.trim();
+  if (!user || !pass) { showNotification('กรุณากรอกข้อมูลให้ครบ', 'error'); return; }
+  const btn = $('login-btn');
+  setBusy(btn, true, 'กำลังตรวจสอบ...');
+  try {
+    const stu = loginRole === 'student';
+    const r = stu ? await api({ action: 'loginStudent', id: user, pin: pass })
+                  : await api({ action: 'loginTeacher', name: user, password: pass });
+    if (!r.ok) { showNotification(r.error, 'error'); return; }
+    saveSession(stu ? { role: 'student', id: user, pin: pass, name: r.name, room: r.room }
+                    : { role: 'teacher', name: user, password: pass, rooms: r.rooms });
+    enterDash();
+  } catch (e) {
+    showNotification('เชื่อมต่อไม่ได้: ' + e.message, 'error');
+  } finally {
+    setBusy(btn, false, '🔐 เข้าสู่ระบบ');
+  }
+}
+function enterDash() {
+  if (session.role === 'student') { show('student-dash'); loadStats(); }
+  else { show('teacher-dash'); initTeacher(); }
+}
+function logout() { saveSession(null); show('home-screen'); }
+
+$('login-btn').addEventListener('click', doLogin);
+['login-user', 'login-pass'].forEach((id) => $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); }));
+$('login-back-btn').addEventListener('click', () => show('home-screen'));
+$('login-calc-btn').addEventListener('click', () => show(loginRole === 'student' ? 'student-screen' : 'teacher-screen'));
+$('stu-logout-btn').addEventListener('click', logout);
+$('tch-logout-btn').addEventListener('click', logout);
+$('stu-calc-btn').addEventListener('click', () => show('student-screen'));
+$('tch-calc-btn').addEventListener('click', () => show('teacher-screen'));
+
+/* --- นักศึกษาดูผลของตัวเอง --- */
+async function loadStats() {
+  $('stu-name').textContent = session.name + ' (ห้อง ' + session.room + ')';
+  const box = $('stu-stats');
+  box.style.opacity = 0.5;
+  try {
+    const r = await api({ action: 'getMyStats', id: session.id, pin: session.pin });
+    if (!r.ok) { showNotification(r.error, 'error'); return; }
+    $('stu-percent').textContent = r.percent;
+    const bar = $('stu-bar');
+    bar.style.width = Math.min(100, r.percent) + '%';
+    bar.classList.toggle('low', r.percent < 60);
+    $('stu-held').textContent = r.held;
+    $('stu-total').textContent = r.total;
+    $('stu-attended').textContent = r.attended;
+    $('stu-absent').textContent = r.absent;
+    $('stu-required').textContent = r.required;
+    $('stu-need').textContent = r.needMore;
+    $('stu-remaining').textContent = r.remaining;
+    renderHistory(r.history);
+    renderExtras(r);
+    const st = $('stu-status');
+    if (r.held === 0) {
+      st.className = 'pass-status';
+      st.textContent = 'ยังไม่มีการเช็คชื่อ';
+    } else if (!r.canStillPass) {
+      st.className = 'pass-status fail';
+      st.textContent = '❌ วันที่เหลือไม่พอให้ถึง 60% แล้ว กรุณาติดต่อครูที่ปรึกษา';
+    } else if (r.passNow) {
+      st.className = 'pass-status pass';
+      st.textContent = r.needMore > 0 ? '✅ ตอนนี้ผ่านเกณฑ์ 60% (ต้องมาอีก ' + r.needMore + ' ครั้งให้ครบเทอม)' : '✅ ผ่านเกณฑ์ครบแล้ว';
+    } else {
+      st.className = 'pass-status fail';
+      st.textContent = '⚠️ ตอนนี้ต่ำกว่า 60% ต้องมาอีกอย่างน้อย ' + r.needMore + ' ครั้ง';
     }
+  } catch (e) {
+    showNotification('เชื่อมต่อไม่ได้: ' + e.message, 'error');
+  } finally {
+    box.style.opacity = 1;
+  }
+}
+$('stu-refresh-btn').addEventListener('click', loadStats);
 
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-          overlay.classList.remove('show');
-        }
-      });
+function fmtDate(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));
+  if (!m) return String(s);
+  const days = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
+  const d = new Date(+m[1], +m[2] - 1, +m[3]);
+  return days[d.getDay()] + ' ' + (+m[3]) + '/' + (+m[2]) + '/' + (+m[1] + 543);
+}
+function renderHistory(list) {
+  const h = list || [];
+  $('stu-history').innerHTML = h.length === 0
+    ? '<p class="note" style="padding:14px">ยังไม่มีประวัติการเช็คชื่อ</p>'
+    : h.map((x) => {
+        const cls = x.status === 'มา' ? 's-ok' : x.status === 'ลา' ? 's-leave' : 's-no';
+        return '<div class="hist-row"><span>' + esc(fmtDate(x.date)) + '</span><span class="hist-badge ' + cls + '">' + esc(x.status) + '</span></div>';
+      }).join('');
+}
+$('stu-print-btn').addEventListener('click', () => {
+  $('print-head').textContent = 'รายงานผลการเข้าแถว: ' + session.name + ' (ห้อง ' + session.room + ') | วิทยาลัยเทคนิคเพชรบูรณ์ | พิมพ์เมื่อ ' + new Date().toLocaleDateString('th-TH');
+  window.print();
+});
+
+/* --- ครูเช็คชื่อ --- */
+let tList = [];
+function initTeacher() {
+  $('tch-name').textContent = 'ครู' + session.name.replace(/^ครู/, '');
+  $('tch-room').innerHTML = session.rooms.map((r) => '<option value="' + esc(r) + '">' + esc(r) + '</option>').join('');
+  if (!$('tch-date').value) $('tch-date').value = todayStr();
+  loadRoster();
+}
+async function loadRoster() {
+  const room = $('tch-room').value, date = $('tch-date').value;
+  if (!room || !date) return;
+  $('tch-list').style.opacity = 0.5;
+  try {
+    const r = await api({ action: 'getStudents', name: session.name, password: session.password, room: room, date: date });
+    if (!r.ok) { showNotification(r.error, 'error'); return; }
+    rosterLocked = !!(r.locked || r.cancelled);
+    if (r.onlyToday) { $('tch-date').value = todayStr(); $('tch-date').disabled = true; } else { $('tch-date').disabled = false; }
+    tList = r.cancelled ? [] : r.students.map((s) => ({ id: s.id, name: s.name, status: s.status === 'ลา' ? 'ขาด' : s.status }));
+    $('tch-info').textContent = r.cancelled ? '🌧️ วันนี้ตั้งเป็นวันงดกิจกรรมแล้ว (ไม่นับเป็นวันขาด) ถ้าตั้งผิดให้กด "ล้างข้อมูลวันนี้"'
+      : tList.length === 0 ? 'ไม่พบรายชื่อในห้องนี้'
+      : (r.locked ? '🔒 บันทึกวันนี้แล้ว แก้ไขไม่ได้ ถ้าต้องแก้ให้กด "ล้างข้อมูลวันนี้" แล้วเช็คใหม่' : 'ค่าเริ่มต้นทุกคนคือ "มา" กดเฉพาะคนที่ขาด แล้วกดบันทึก (บันทึกได้ครั้งเดียวต่อวัน)');
+    renderRoster();
+  } catch (e) {
+    showNotification('เชื่อมต่อไม่ได้: ' + e.message, 'error');
+  } finally {
+    $('tch-list').style.opacity = 1;
+  }
+}
+function renderRoster() {
+  $('tch-list').innerHTML = tList.map((s, i) =>
+    '<div class="roster-row"><div class="roster-name">' + (i + 1) + '. ' + esc(s.name) + '<small>' + esc(s.id) + '</small></div>' +
+    '<div class="seg" data-id="' + esc(s.id) + '">' +
+    [['มา', 's-ok'], ['ขาด', 's-no']].map((p) =>
+      '<button class="seg-btn ' + p[1] + (s.status === p[0] ? ' active' : '') + '" data-st="' + p[0] + '"' + (rosterLocked ? ' disabled' : '') + '>' + p[0] + '</button>').join('') +
+    '</div></div>').join('');
+  updateSummary();
+}
+function updateSummary() {
+  applyRosterState();
+  const c = { 'มา': 0, 'ขาด': 0, 'ลา': 0 };
+  tList.forEach((s) => { c[s.status] = (c[s.status] || 0) + 1; });
+  $('tch-summary').textContent = 'สรุป: มา ' + c['มา'] + ' | ขาด ' + c['ขาด'] + ' | ทั้งหมด ' + tList.length + ' คน';
+}
+$('tch-list').addEventListener('click', (e) => {
+  const btn = e.target.closest('.seg-btn');
+  if (!btn) return;
+  const seg = btn.parentElement;
+  const s = tList.find((x) => x.id === seg.dataset.id);
+  if (!s) return;
+  s.status = btn.dataset.st;
+  seg.querySelectorAll('.seg-btn').forEach((b) => b.classList.toggle('active', b === btn));
+  updateSummary();
+});
+$('tch-room').addEventListener('change', loadRoster);
+$('tch-date').addEventListener('change', loadRoster);
+$('tch-allok-btn').addEventListener('click', () => { tList.forEach((s) => { s.status = 'มา'; }); renderRoster(); });
+$('tch-save-btn').addEventListener('click', async () => {
+  const room = $('tch-room').value, date = $('tch-date').value;
+  if (!date || !tList.length) { showNotification('ไม่มีข้อมูลให้บันทึก', 'error'); return; }
+  const day = new Date(date + 'T00:00:00').getDay();
+  if ((day === 0 || day === 6) && !confirm('วันที่เลือกเป็นวันเสาร์/อาทิตย์ ต้องการบันทึกต่อหรือไม่?')) return;
+  if (!confirm('บันทึกแล้วจะแก้ไขไม่ได้ ต้องการบันทึกวันที่ ' + date + ' ใช่หรือไม่?')) return;
+  const btn = $('tch-save-btn');
+  setBusy(btn, true, 'กำลังบันทึก...');
+  try {
+    const r = await api({
+      action: 'saveAttendance', name: session.name, password: session.password, room: room, date: date,
+      records: tList.map((s) => ({ id: s.id, status: s.status }))
     });
+    if (!r.ok) { showNotification(r.error, 'error'); return; }
+    showNotification('บันทึกแล้ว (' + r.added + ' คน)', 'ok');
+    loadRoster();
+    
+  } catch (e) {
+    showNotification('เชื่อมต่อไม่ได้: ' + e.message, 'error');
+  } finally {
+    setBusy(btn, false, '💾 บันทึกการเช็คชื่อ');
+  }
+});
 
-    document.getElementById('student-calculate-btn').addEventListener('click', () => {
-      const level = document.getElementById('student-level').value;
-      const activity = document.getElementById('student-activity').value;
+/* --- ฟีเจอร์เพิ่มของนักศึกษา: สตรีค / โควตาวันขาด / จำลองสถานการณ์ / ป้าย / ปฏิทิน --- */
+let lastStats = null;
+function renderExtras(r) {
+  lastStats = r;
+  const h = r.history || [];
+  let streak = 0;
+  for (const x of h) { if (x.status === 'มา') streak++; else break; } // h เรียงใหม่สุดก่อน
+  $('stu-streak').textContent = streak;
+  $('stu-quota').textContent = r.canStillPass ? Math.max(0, r.attended + r.remaining - r.required) : 0;
+  updateWhatIf();
 
-      if (!level || !activity) {
-        showNotification('กรุณาเลือกะดับชั้นและกิจกรรม', 'error');
-        return;
-      }
+  const b = [];
+  if (streak >= 5) b.push('🔥 มาติดต่อกัน 5 วัน');
+  if (streak >= 10) b.push('⚡ มาติดต่อกัน 10 วัน');
+  if (r.held >= 5 && r.absent === 0) b.push('💯 ไม่เคยขาด');
+  if (r.held >= 5 && r.percent >= 90) b.push('🌟 เข้าแถวเกิน 90%');
+  if (r.held > 0 && r.passNow) b.push('✅ ผ่านเกณฑ์ 60%');
+  $('stu-badges').innerHTML = b.length ? b.map((t) => '<span class="badge">' + t + '</span>').join('')
+    : '<p class="note">ยังไม่มีป้าย ลองมาให้ติดกัน 5 วันดูนะ!</p>';
+  renderCal(h, r.cancelled);
+}
+function updateWhatIf() {
+  if (!lastStats) return;
+  const r = lastStats;
+  const n = Math.min(Math.max(parseInt($('stu-whatif').value, 10) || 0, 0), r.remaining);
+  const final = ((r.attended + r.remaining - n) / r.total) * 100;
+  $('stu-whatif-out').textContent = final.toFixed(1) + '% ' + (final >= 60 ? '✅ ผ่าน' : '❌ ไม่ผ่าน');
+}
+$('stu-whatif').addEventListener('input', updateWhatIf);
+function renderCal(list, off) {
+  list = list.concat((off || []).map((d) => ({ date: d, status: 'งด' })));
+  const wk = {};
+  list.forEach((x) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(x.date));
+    if (!m) return;
+    const d = new Date(+m[1], +m[2] - 1, +m[3]);
+    const dow = d.getDay();
+    if (dow === 0 || dow === 6) return;
+    const mon = new Date(d); mon.setDate(d.getDate() - (dow - 1));
+    const k = mon.getTime();
+    (wk[k] = wk[k] || { start: mon, c: [] }).c[dow - 1] = x.status === 'มา' ? 'ok' : x.status === 'งด' ? 'off' : 'no';
+  });
+  const keys = Object.keys(wk).sort((a, b) => a - b);
+  $('stu-cal').innerHTML = keys.length === 0 ? '<p class="note">ยังไม่มีข้อมูล</p>' :
+    '<div class="cal-row"><span></span>' + ['จ', 'อ', 'พ', 'พฤ', 'ศ'].map((t) => '<span style="text-align:center">' + t + '</span>').join('') + '</div>' +
+    keys.map((k) => {
+      const w = wk[k];
+      let cells = '';
+      for (let i = 0; i < 5; i++) cells += '<i class="cal-cell ' + (w.c[i] || '') + '"></i>';
+      return '<div class="cal-row"><span>' + w.start.getDate() + '/' + (w.start.getMonth() + 1) + '</span>' + cells + '</div>';
+    }).join('') + '<p class="note" style="text-align:left">เขียว = มา, แดง = ขาด, ส้ม = งดกิจกรรม, เทา = ไม่มีข้อมูล</p>';
+}
 
-      const totalWeeks = level === 'pvs' ? 16 : 18;
-      
-      let totalActivities;
-      if (activity === 'flag') {
-        totalActivities = totalWeeks * 5;
-      } else {
-        totalActivities = totalWeeks * 1;
-      }
+/* --- ครู: รายงานรายวัน + พิมพ์ตาราง --- */
+const TM = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+function fmtMonth(m) { const p = String(m).split('-'); return TM[+p[1] - 1] + ' ' + (+p[0] + 543); }
+let repData = null;
+$('tch-report-btn').addEventListener('click', () => {
+  $('rep-room').innerHTML = session.rooms.map((r) => '<option value="' + esc(r) + '">' + esc(r) + '</option>').join('');
+  if ($('tch-room').value) $('rep-room').value = $('tch-room').value;
+  if (!$('rep-month').value) $('rep-month').value = todayStr().slice(0, 7);
+  show('report-screen');
+  loadReport();
+});
+$('rep-back-btn').addEventListener('click', () => show('teacher-dash'));
+$('rep-room').addEventListener('change', loadReport);
+$('rep-month').addEventListener('change', loadReport);
+async function loadReport() {
+  const room = $('rep-room').value, month = $('rep-month').value;
+  if (!room || !month) return;
+  $('rep-table').style.opacity = 0.5;
+  try {
+    const r = await api({ action: 'getRoomReport', name: session.name, password: session.password, room: room, month: month });
+    if (!r.ok) { showNotification(r.error, 'error'); return; }
+    repData = r;
+    renderReport();
+  } catch (e) {
+    showNotification('เชื่อมต่อไม่ได้: ' + e.message, 'error');
+  } finally {
+    $('rep-table').style.opacity = 1;
+  }
+}
+function renderReport() {
+  const d = repData.dates, S = repData.students;
+  if (!d.length) { $('rep-table').innerHTML = ''; $('rep-note').textContent = 'เดือนนี้ยังไม่มีการเช็คชื่อ'; return; }
+  let h = '<tr><th>ที่</th><th class="l">ชื่อ-สกุล</th>' + d.map((x) => '<th>' + (+x.slice(8)) + '</th>').join('') + '<th>มาทั้งเทอม</th><th>%</th></tr>';
+  S.forEach((s, i) => {
+    const pct = s.held ? Math.round((s.attended / s.held) * 100) : 0;
+    h += '<tr><td>' + (i + 1) + '</td><td class="l">' + esc(s.name) + '</td>' +
+      d.map((x) => { const m = s.marks[x]; return '<td class="' + (m === 'มา' ? 'ok' : m && m !== 'งด' ? 'no' : '') + '">' + (m === 'มา' ? '✓' : m === 'งด' ? 'งด' : m ? '✗' : '-') + '</td>'; }).join('') +
+      '<td>' + s.attended + '/' + s.held + '</td><td class="' + (pct < 60 ? 'no' : '') + '">' + pct + '</td></tr>';
+  });
+  h += '<tr class="foot"><td></td><td class="l">จำนวนที่มา</td>' +
+    d.map((x) => '<td>' + S.filter((s) => s.marks[x] === 'มา').length + '</td>').join('') + '<td colspan="2">' + S.length + ' คน</td></tr>';
+  $('rep-table').innerHTML = h;
+  $('rep-note').textContent = 'ตัวเลขหัวตารางคือวันที่ของเดือนที่เลือก | ✓ = มา, ✗ = ขาด, งด = งดกิจกรรม | % คิดจากทุกวันที่เช็คตลอดเทอม ต่ำกว่า 60% ขึ้นสีแดง';
+}
+$('rep-print-btn').addEventListener('click', () => {
+  $('rep-head').textContent = 'รายงานเช็คชื่อเข้าแถว ห้อง ' + $('rep-room').value + ' ประจำเดือน' + fmtMonth($('rep-month').value) +
+    ' | ครูที่ปรึกษา: ' + session.name + ' | พิมพ์เมื่อ ' + new Date().toLocaleDateString('th-TH');
+  window.print();
+});
 
-      const requiredAttendance = Math.ceil(totalActivities * 0.6);
-      const canMiss = Math.max(0, totalActivities - requiredAttendance);
+/* --- ล็อกการเช็คชื่อ / งดกิจกรรม / รีเซ็ต --- */
+let rosterLocked = false;
+function applyRosterState() {
+  ['tch-save-btn', 'tch-allok-btn', 'tch-cancel-btn'].forEach((id) => { $(id).disabled = rosterLocked; });
+}
+async function teacherCall(payload, okMsg) {
+  try {
+    const r = await api(Object.assign({ name: session.name, password: session.password, room: $('tch-room').value, date: $('tch-date').value }, payload));
+    if (!r.ok) { showNotification(r.error, 'error'); return; }
+    showNotification(typeof okMsg === 'function' ? okMsg(r) : okMsg, 'ok');
+    loadRoster();
+  } catch (e) {
+    showNotification('เชื่อมต่อไม่ได้: ' + e.message, 'error');
+  }
+}
+$('tch-cancel-btn').addEventListener('click', () => {
+  if (!confirm('ตั้งวันที่ ' + $('tch-date').value + ' เป็นวันงดกิจกรรม (เช่น ฝนตก) ของห้อง ' + $('tch-room').value + ' ใช่หรือไม่?\nวันนี้จะไม่นับเป็นวันขาด และตัดออกจากจำนวนวันทั้งเทอม')) return;
+  teacherCall({ action: 'setCancelled' }, 'ตั้งเป็นวันงดกิจกรรมแล้ว');
+});
+$('tch-resetday-btn').addEventListener('click', () => {
+  if (!confirm('ล้างข้อมูลเช็คชื่อ/งดกิจกรรม ของห้อง ' + $('tch-room').value + ' วันที่ ' + $('tch-date').value + ' ทั้งหมดใช่หรือไม่?')) return;
+  teacherCall({ action: 'resetAttendance', mode: 'day' }, (r) => 'ล้างข้อมูลแล้ว (' + r.deleted + ' รายการ)');
+});
+$('tch-resetroom-btn').addEventListener('click', () => {
+  const t = prompt('รีเซ็ตทั้งห้อง ' + $('tch-room').value + ' จะลบข้อมูลเช็คชื่อและวันงดกิจกรรมทุกวันของห้องนี้ ย้อนกลับไม่ได้\nพิมพ์คำว่า รีเซ็ต เพื่อยืนยัน');
+  if (t !== 'รีเซ็ต') return;
+  teacherCall({ action: 'resetAttendance', mode: 'room' }, (r) => 'รีเซ็ตทั้งห้องแล้ว (' + r.deleted + ' รายการ)');
+});
 
-      document.getElementById('student-total-weeks').textContent = totalWeeks;
-      document.getElementById('student-required').textContent = requiredAttendance;
-      document.getElementById('student-can-miss').textContent = canMiss;
+/* --- ครู: นักศึกษาที่ควรติดตาม + ใบแจ้งผู้ปกครอง --- */
+let riskData = null;
+$('tch-risk-btn').addEventListener('click', () => {
+  $('risk-room').innerHTML = session.rooms.map((r) => '<option value="' + esc(r) + '">' + esc(r) + '</option>').join('');
+  if ($('tch-room').value) $('risk-room').value = $('tch-room').value;
+  show('risk-screen');
+  loadRisk();
+});
+$('risk-back-btn').addEventListener('click', () => show('teacher-dash'));
+$('risk-room').addEventListener('change', loadRisk);
+async function loadRisk() {
+  const room = $('risk-room').value;
+  if (!room) return;
+  $('risk-table').style.opacity = 0.5;
+  try {
+    const r = await api({ action: 'getRiskList', name: session.name, password: session.password, room: room });
+    if (!r.ok) { showNotification(r.error, 'error'); return; }
+    riskData = r;
+    renderRisk();
+  } catch (e) {
+    showNotification('เชื่อมต่อไม่ได้: ' + e.message, 'error');
+  } finally {
+    $('risk-table').style.opacity = 1;
+  }
+}
+function renderRisk() {
+  const L = riskData.list;
+  if (!L.length) {
+    $('risk-table').innerHTML = '';
+    $('risk-note').textContent = riskData.checked === 0 ? 'ยังไม่มีข้อมูลการเช็คชื่อของห้องนี้' : '🎉 ไม่มีนักศึกษาที่เสี่ยงในห้องนี้ (ตรวจแล้ว ' + riskData.checked + ' คน)';
+    return;
+  }
+  let h = '<tr><th>ที่</th><th class="l">ชื่อ-สกุล</th><th>รหัส</th><th>มา/เช็ค</th><th>%</th><th>ต้องมาอีก</th><th>สถานะ</th><th class="no-print">ใบแจ้ง</th></tr>';
+  L.forEach((s, i) => {
+    const cls = s.status === 'เสี่ยง' ? 'warn' : 'no';
+    h += '<tr><td>' + (i + 1) + '</td><td class="l">' + esc(s.name) + '</td><td>' + esc(s.id) + '</td><td>' + s.attended + '/' + s.held + '</td><td class="' + cls + '">' + s.percent + '</td><td>' + s.needMore + '</td><td class="' + cls + '">' + esc(s.status) + '</td><td class="no-print"><button class="mini-btn" data-i="' + i + '">🖨️</button></td></tr>';
+  });
+  $('risk-table').innerHTML = h;
+  $('risk-note').textContent = 'พบ ' + L.length + ' คน จาก ' + riskData.checked + ' คนที่มีข้อมูล | เรียงจาก % ต่ำสุด | "เสี่ยง" = ยังผ่านแต่ต่ำกว่า 70% | กด 🖨️ เพื่อพิมพ์ใบแจ้งผู้ปกครองรายบุคคล';
+}
+$('risk-table').addEventListener('click', (e) => {
+  const b = e.target.closest('.mini-btn');
+  if (b) makeNotice(riskData.list[+b.dataset.i]);
+});
+$('risk-print-btn').addEventListener('click', () => {
+  $('risk-head').textContent = 'รายชื่อนักศึกษาที่ควรติดตาม ห้อง ' + $('risk-room').value + ' | ครูที่ปรึกษา: ' + session.name + ' | พิมพ์เมื่อ ' + new Date().toLocaleDateString('th-TH');
+  window.print();
+});
+function makeNotice(s) {
+  const dt = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+  let el = $('notice');
+  if (!el) { el = document.createElement('div'); el.id = 'notice'; el.className = 'notice-sheet'; document.body.appendChild(el); }
+  el.innerHTML = '<h2 style="text-align:center">วิทยาลัยเทคนิคเพชรบูรณ์</h2><h3 style="text-align:center;margin-bottom:24px">ใบแจ้งผลการเข้าร่วมกิจกรรมเข้าแถว</h3>' +
+    '<p>เรียน ผู้ปกครองของ <b>' + esc(s.name) + '</b> (รหัส ' + esc(s.id) + ') ห้อง ' + esc($('risk-room').value) + '</p>' +
+    '<p style="text-indent:2em">ณ วันที่ ' + dt + ' นักศึกษาเข้าแถว <b>' + s.attended + '</b> จาก ' + s.held + ' ครั้ง คิดเป็น <b>' + s.percent + '%</b> ซึ่งเกณฑ์ผ่านขั้นต่ำคือ 60%</p>' +
+    (s.status === 'ไม่สามารถผ่านได้'
+      ? '<p style="text-indent:2em">จากจำนวนวันที่เหลือ นักศึกษาไม่สามารถเข้าแถวให้ถึงเกณฑ์ได้แล้ว ขอความอนุเคราะห์ติดต่อครูที่ปรึกษาโดยด่วน</p>'
+      : '<p style="text-indent:2em">นักศึกษาจำเป็นต้องเข้าแถวอีกอย่างน้อย <b>' + s.needMore + '</b> ครั้ง จากวันที่เหลือประมาณ ' + s.remaining + ' ครั้ง จึงจะผ่านเกณฑ์ ขอความร่วมมือผู้ปกครองกำชับนักศึกษา</p>') +
+    '<p style="margin-top:60px;text-align:right">ลงชื่อ ........................................ ครูที่ปรึกษา<br>(' + esc(session.name) + ')</p>';
+  document.body.classList.add('print-notice');
+  window.print();
+}
+window.addEventListener('afterprint', () => document.body.classList.remove('print-notice'));
 
-      document.getElementById('student-result').classList.add('show');
-    });
+/* --- ติดตั้งเป็นแอป (PWA) --- */
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installEvt = e; $('install-btn').style.display = ''; });
+$('install-btn').addEventListener('click', async () => {
+  if (!installEvt) return;
+  installEvt.prompt();
+  await installEvt.userChoice;
+  installEvt = null;
+  $('install-btn').style.display = 'none';
+});
+window.addEventListener('appinstalled', () => { $('install-btn').style.display = 'none'; });
 
-    document.getElementById('teacher-calculate-btn').addEventListener('click', () => {
-      const level = document.getElementById('teacher-level').value;
-      const activity = document.getElementById('teacher-activity').value;
-      const attended = parseInt(document.getElementById('teacher-attended').value) || 0;
-      const cancelled = parseInt(document.getElementById('teacher-cancelled').value) || 0;
-
-      if (!level || !activity) {
-        showNotification('กรุณาเลือกระดับชั้นและกิจกรรม', 'error');
-        return;
-      }
-
-      const totalWeeks = level === 'pvs' ? 16 : 18;
-      
-      let totalActivities;
-      if (activity === 'flag') {
-        totalActivities = totalWeeks * 5;
-      } else {
-        totalActivities = totalWeeks * 1;
-      }
-      
-      // หักจำนวนครั้งที่ไม่ได้จัดกิจกรรมออก
-      const actualTotal = Math.max(0, totalActivities - cancelled);
-      
-      const requiredAttendance = Math.ceil(actualTotal * 0.6);
-      const percentage = actualTotal > 0 ? ((attended / actualTotal) * 100).toFixed(2) : 0;
-      const isPassed = attended >= requiredAttendance;
-
-      document.getElementById('teacher-total-weeks').textContent = totalWeeks;
-      document.getElementById('teacher-cancelled-display').textContent = cancelled;
-      document.getElementById('teacher-actual-total').textContent = actualTotal;
-      document.getElementById('teacher-attended-display').textContent = attended;
-      document.getElementById('teacher-required').textContent = requiredAttendance;
-      document.getElementById('teacher-percentage').textContent = percentage;
-
-      const statusElement = document.getElementById('teacher-status');
-      if (isPassed) {
-        statusElement.className = 'pass-status pass';
-        statusElement.textContent = '✅ นักศึกษาผ่านเกณฑ์ 60%';
-      } else {
-        statusElement.className = 'pass-status fail';
-        statusElement.textContent = `❌ นักศึกษาไม่ผ่านเกณฑ์ (ต้องเข้าร่วมอย่างน้อย ${requiredAttendance} ครั้ง)`;
-      }
-
-      document.getElementById('teacher-result').classList.add('show');
-    });
-
-    function showNotification(message, type) {
-      const notification = document.createElement('div');
-      notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: ${type === 'error' ? '#f44336' : '#4CAF50'};
-        color: white;
-        padding: 20px 40px;
-        border-radius: 12px;
-        font-size: 18px;
-        font-weight: 600;
-        z-index: 10000;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        animation: slideDown 0.3s ease;
-      `;
-      notification.textContent = message;
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        notification.style.animation = 'fadeOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-      }, 3000);
-    }
-
-    async function onConfigChange(config) {
-      const siteTitle = document.getElementById('site-title');
-      const studentButtonText = document.getElementById('student-button-text');
-      const teacherButtonText = document.getElementById('teacher-button-text');
-      const footerAddress = document.getElementById('footer-address');
-
-      if (siteTitle) siteTitle.textContent = config.site_title || defaultConfig.site_title;
-      if (studentButtonText) studentButtonText.textContent = config.student_button_text || defaultConfig.student_button_text;
-      if (teacherButtonText) teacherButtonText.textContent = config.teacher_button_text || defaultConfig.teacher_button_text;
-      if (footerAddress) footerAddress.innerHTML = (config.footer_address || defaultConfig.footer_address).replace(/\n/g, '<br>');
-    }
-
-    function mapToCapabilities(config) {
-      return {
-        recolorables: [],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
-      };
-    }
-
-    function mapToEditPanelValues(config) {
-      return new Map([
-        ['site_title', config.site_title || defaultConfig.site_title],
-        ['student_button_text', config.student_button_text || defaultConfig.student_button_text],
-        ['teacher_button_text', config.teacher_button_text || defaultConfig.teacher_button_text],
-        ['footer_address', config.footer_address || defaultConfig.footer_address]
-      ]);
-    }
-
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
-      });
-    }
-
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideDown {
-        from { transform: translate(-50%, -100%); opacity: 0; }
-        to { transform: translate(-50%, 0); opacity: 1; }
-      }
-      @keyframes fadeOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
-      }
-    `;
-    document.head.appendChild(style);
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c8b58002367a18c',t:'MTc3MDIyMDQzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+// ถ้าเคยล็อกอินค้างไว้ในแท็บนี้ ให้เข้าหน้าของตัวเองเลย
+if (session && (session.role === 'student' || session.role === 'teacher')) enterDash();
+</script>
+</body>
 </html>
